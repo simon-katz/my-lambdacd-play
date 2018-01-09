@@ -3,6 +3,7 @@
   :url "http://example.com/FIXME"
   :dependencies [[com.taoensso/timbre "4.10.0"]
                  [lambdacd "0.13.5"]
+                 [lambdacd-git "0.2.0"]
                  [lambdaui "1.0.0"]
                  [http-kit "2.2.0"]
                  [org.clojure/clojure "1.7.0"]

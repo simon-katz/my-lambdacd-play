@@ -3,13 +3,21 @@
             [lambdacd.steps.manualtrigger :as manualtrigger]
             [my-lambdacd-play.steps :as steps]))
 
+;;;; jsk-note: The backquote is needed. With quote, the symbols don't get
+;;;; resolved. Nasty.
+
 (def pipeline-def
-  ;; jsk-note: The backquote is needed. With quote, the symbols don't get
-  ;; resolved. Nasty.
-  `(manualtrigger/wait-for-manual-trigger
-    steps/some-step-that-does-nothing
-    (cf/in-parallel
-     steps/some-step-that-echos-foo
-     steps/some-step-that-echos-bar)
-    manualtrigger/wait-for-manual-trigger
-    steps/some-failing-step))
+  (case 2
+    1 `(manualtrigger/wait-for-manual-trigger
+        steps/some-step-that-does-nothing
+        (cf/in-parallel
+         steps/some-step-that-echos-foo
+         steps/some-step-that-echos-bar)
+        manualtrigger/wait-for-manual-trigger
+        steps/some-failing-step)
+    2 `((cf/either
+         manualtrigger/wait-for-manual-trigger
+         steps/wait-for-repo)
+        (cf/with-workspace
+          steps/clone
+          steps/run-some-tests))))

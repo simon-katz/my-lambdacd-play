@@ -1,10 +1,9 @@
 (ns my-lambdacd-play.ui-selection
-  (:require
-    [hiccup.core :as h]
-    [lambdaui.core :as lambdaui]
-    [lambdacd.ui.core :as reference-ui]
-    [compojure.core :refer [routes GET context]])
-  (:gen-class))
+  (:gen-class)
+  (:require [compojure.core :refer [context GET routes]]
+            [hiccup.core :as h]
+            [lambdacd.ui.core :as reference-ui]
+            [lambdaui.core :as lambdaui]))
 
 (defn- ui-selection []
   (h/html

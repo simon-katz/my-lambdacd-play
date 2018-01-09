@@ -1,13 +1,12 @@
 (ns my-lambdacd-play.core
-  (:require
-    [my-lambdacd-play.pipeline :as pipeline]
-    [my-lambdacd-play.ui-selection :as ui-selection]
-    [org.httpkit.server :as http-kit]
-    [lambdacd.runners :as runners]
-    [lambdacd.util :as util]
-    [lambdacd.core :as lambdacd]
-    [clojure.tools.logging :as log])
-  (:gen-class))
+  (:gen-class)
+  (:require [clojure.tools.logging :as log]
+            [lambdacd.core :as lambdacd]
+            [lambdacd.runners :as runners]
+            [lambdacd.util :as util]
+            [my-lambdacd-play.pipeline :as pipeline]
+            [my-lambdacd-play.ui-selection :as ui-selection]
+            [org.httpkit.server :as http-kit]))
 
 (defn -main [& args]
   (let [;; the home dir is where LambdaCD saves all data.

@@ -47,6 +47,8 @@
   []
   (alter-var-root #'the-system
                   (fn [system]
+                    ;; FIXME There's stuff created by `core/-main` that isn't
+                    ;;       getting shutdown (I think).
                     (when (and system
                                (:stop-fun system))
                       ((:stop-fun system))

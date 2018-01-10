@@ -11,7 +11,9 @@
 (defn -main [& args]
   (let [;; the home dir is where LambdaCD saves all data.
         ;; point this to a particular directory to keep builds around after restarting
-        home-dir (util/create-temp-dir)
+        home-dir (case 2
+                   1 (util/create-temp-dir)
+                   2 "/Users/simonkatz/__no-backup/lambacd-play/work-area")
         config   {:home-dir home-dir
                   :name     "my lambdacd play"}
         ;; initialize and wire everything together

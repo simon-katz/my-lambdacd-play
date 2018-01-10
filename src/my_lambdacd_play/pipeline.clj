@@ -20,4 +20,7 @@
          steps/wait-for-repo)
         (cf/with-workspace
           steps/clone
-          steps/run-some-tests))))
+          ;; manualtrigger/wait-for-manual-trigger
+          steps/run-tests
+          ;; manualtrigger/wait-for-manual-trigger
+          ))))

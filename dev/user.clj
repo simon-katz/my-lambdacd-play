@@ -8,7 +8,8 @@
             [clojure.tools.namespace.repl :refer :all]
             ;; [com.stuartsierra.component]
             [midje.repl :refer :all]
-            [my-lambdacd-play.core :as core]))
+            [my-lambdacd-play.core :as core]
+            [taoensso.timbre :as timbre]))
 
 ;;;; ___________________________________________________________________________
 ;;;; Clojure workflow.
@@ -38,9 +39,32 @@
   []
   (alter-var-root #'the-system
                   (fn [the-system]
-                    (assoc the-system
-                           :stop-fun
-                           (core/-main)))))
+                    (timbre/info "Starting")
+                    (core/-main))))
+
+(defn stop-server [system]
+  (if-not (and system
+               (:stop-server-fun system))
+    system
+    (do
+      (timbre/info "Stopping server")
+      ((:stop-server-fun system))
+      (dissoc system :stop-server-fun))))
+
+(defn stop-pipeline [system]
+  (if-not (and system
+               (:pipeline system))
+    system
+    (do
+      (timbre/info "Stopping pipeline")
+      (let [ctx (-> system
+                    :pipeline
+                    :context)
+            shutdown-sequence (-> ctx
+                                  :config
+                                  :shutdown-sequence)]
+        (shutdown-sequence ctx))
+      (dissoc system :pipeline))))
 
 (defn stop
   "Shuts down and destroys the current development system."
@@ -49,11 +73,10 @@
                   (fn [system]
                     ;; FIXME There's stuff created by `core/-main` that isn't
                     ;;       getting shutdown (I think).
-                    (when (and system
-                               (:stop-fun system))
-                      ((:stop-fun system))
-                      (dissoc system
-                              :stop-fun)))))
+                    (timbre/info "Stopping system")
+                    (-> system
+                        stop-server
+                        stop-pipeline))))
 
 (defn go
   "Creates a system, makes it the current development system and starts it."

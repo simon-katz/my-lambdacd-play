@@ -8,6 +8,13 @@
             [my-lambdacd-play.ui-selection :as ui-selection]
             [org.httpkit.server :as http-kit]))
 
+(defrecord MySystem [name
+                     stop-server-fun
+                     pipeline])
+
+(defmethod clojure.core/print-method MySystem [x writer]
+  (.write writer (:name x)))
+
 (defn -main [& args]
   (let [;; the home dir is where LambdaCD saves all data.
         ;; point this to a particular directory to keep builds around after restarting
@@ -25,5 +32,8 @@
     ;; there are other runners and you can define your own as well.
     (runners/start-one-run-after-another pipeline)
     ;; start the webserver to serve the UI
-    (http-kit/run-server app {:open-browser? false
-                              :port          8080})))
+    (map->MySystem
+     {:name "My instance of MySystem"
+      :stop-server-fun (http-kit/run-server app {:open-browser? false
+                                                 :port          8080})
+      :pipeline pipeline})))
